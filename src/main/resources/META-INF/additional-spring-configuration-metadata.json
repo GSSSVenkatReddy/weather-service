@@ -1,0 +1,27 @@
+{"properties": [
+  {
+    "name": "geocoding.apikey",
+    "type": "java.lang.String",
+    "description": "A description for 'geocoding.apikey'"
+  },
+  {
+    "name": "openweather.apikey",
+    "type": "java.lang.String",
+    "description": "A description for 'openweather.apikey'"
+  },
+  {
+    "name": "geocoding.url",
+    "type": "java.lang.String",
+    "description": "A description for 'geocoding.url'"
+  },
+  {
+    "name": "openweather.url",
+    "type": "java.lang.String",
+    "description": "A description for 'openweather.url'"
+  },
+  {
+    "name": "weeklyweather.dateformat",
+    "type": "java.lang.String",
+    "description": "A description for 'weeklyweather.dateformat'"
+  }
+]}
