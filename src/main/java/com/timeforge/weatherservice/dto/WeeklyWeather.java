@@ -13,7 +13,7 @@ public class WeeklyWeather {
     private String date;
     private double lowTemperatute;
     private double highTemperature;
-    private int humidity;
+    private double humidity;
     private double precipitationPercentage;
     private String descriptiveCondition;
 }

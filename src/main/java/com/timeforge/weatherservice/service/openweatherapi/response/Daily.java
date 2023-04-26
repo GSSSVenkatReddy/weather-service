@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class Daily {
     private Long dt;
     private Temperature temp;
-    private int humidity;
+    private double humidity;
     private List<Weather> weather;
     private double pop;
 }

@@ -23,5 +23,25 @@
     "name": "weeklyweather.dateformat",
     "type": "java.lang.String",
     "description": "A description for 'weeklyweather.dateformat'"
+  },
+  {
+    "name": "api.visualcrossing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.visualcrossing'"
+  },
+  {
+    "name": "api.openweather",
+    "type": "java.lang.String",
+    "description": "A description for 'api.openweather'"
+  },
+  {
+    "name": "visualcrossing.url",
+    "type": "java.lang.String",
+    "description": "A description for 'visualcrossing.url'"
+  },
+  {
+    "name": "visualcrossing.apikey",
+    "type": "java.lang.String",
+    "description": "A description for 'visualcrossing.apikey'"
   }
 ]}

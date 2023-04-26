@@ -14,6 +14,8 @@ import com.timeforge.weatherservice.service.geocodingapi.response.GeoCodingApiRe
 import com.timeforge.weatherservice.service.openweatherapi.response.Daily;
 import com.timeforge.weatherservice.service.openweatherapi.response.OpenWeatherApiResponse;
 import com.timeforge.weatherservice.service.openweatherapi.response.Weather;
+import com.timeforge.weatherservice.service.visualcrossingapi.response.Days;
+import com.timeforge.weatherservice.service.visualcrossingapi.response.VisualCrossingApiResponse;
 
 @Component
 public class WeatherServiceTransformer {
@@ -50,6 +52,26 @@ public class WeatherServiceTransformer {
     public String getLongitude(GeoCodingApiResponse geoCodingApiResponse) {
         String longitude = String.valueOf(geoCodingApiResponse.getPlus_code().getGeometry().getLocation().getLng());
         return longitude;
+    }
+
+    public WeatherServiceResponse transformToWeatherServiceResponseFromVisualCrossingApiResponse(
+            VisualCrossingApiResponse visualCrossingApiResponse) {
+        WeatherServiceResponse weatherServiceResponse = new WeatherServiceResponse();
+        List<WeeklyWeather> weeklyWeatherList = new ArrayList<>();
+        for(int i=0; i < visualCrossingApiResponse.getDays().size() - 8; i++){
+            Days days = visualCrossingApiResponse.getDays().get(i);
+            WeeklyWeather weeklyWeather = new WeeklyWeather();
+            weeklyWeather.setDate(days.getDatetime());
+            weeklyWeather.setLowTemperatute(days.getTempmin());
+            weeklyWeather.setHighTemperature(days.getTempmax());
+            weeklyWeather.setHumidity(days.getHumidity());
+            weeklyWeather.setDescriptiveCondition(days.getDescription());
+            weeklyWeather.setPrecipitationPercentage(days.getPrecipprob());
+
+            weeklyWeatherList.add(weeklyWeather);
+        }
+        weatherServiceResponse.setWeeklyWeather(weeklyWeatherList);
+        return weatherServiceResponse;
     }
     
 }
