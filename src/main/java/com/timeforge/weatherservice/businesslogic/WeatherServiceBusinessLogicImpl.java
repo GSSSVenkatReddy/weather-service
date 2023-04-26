@@ -29,13 +29,21 @@ public class WeatherServiceBusinessLogicImpl implements IWeatherServiceBusinessL
     @Value("${api.visualcrossing}")
     private String visualcrossingApi;
 
+    /**
+    * Returns an object that contains weather details for a week to the calling application
+    * Contains specific business logic for which weather api to consume 
+    *  
+    * @param  zipCode  zipcode of a location
+    * @param  weatherApi type of weather api to be used for getting weather details
+    * @return  WeatherServiceResponse 
+    */
     @Override
     public WeatherServiceResponse getWeatherDetails(Integer zipCode, String weatherApi) {
 
         WeatherServiceResponse weatherServiceResponse = new WeatherServiceResponse();
 
         if(weatherApi.equals(openWeatherApi)){
-            GeoCodingApiResponse geoCodingApiResponse =  weatherService.geoCodingApiResponse(zipCode, weatherApi);
+            GeoCodingApiResponse geoCodingApiResponse =  weatherService.geoCodingApiResponse(zipCode);
 
             OpenWeatherApiResponse openWeatherApiResponse = weatherService.openWeatherApiResponse(transformer.getLatitude(geoCodingApiResponse), transformer.getLongitude(geoCodingApiResponse));
     

@@ -7,7 +7,7 @@ import com.timeforge.weatherservice.service.visualcrossingapi.response.VisualCro
 
 public interface IWeatherService {
 
-    public GeoCodingApiResponse geoCodingApiResponse(Integer zipCode, String weatherApi);
+    public GeoCodingApiResponse geoCodingApiResponse(Integer zipCode);
 
     public OpenWeatherApiResponse openWeatherApiResponse(String latitude, String longitude);
 

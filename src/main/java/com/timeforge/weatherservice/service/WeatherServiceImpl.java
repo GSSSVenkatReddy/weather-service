@@ -43,9 +43,14 @@ public class WeatherServiceImpl implements IWeatherService{
     @Value("${visualcrossing.apikey}")
     private String visualCrossingApiKey;
 
-
+    /**
+    * Returns an object that contains location details based on zipcode 
+    *
+    * @param  zipCode  zipcode of a location
+    * @return  GeoCodingApiResponse 
+    */
     @Override
-    public GeoCodingApiResponse geoCodingApiResponse(Integer zipCode, String weatherApi) {
+    public GeoCodingApiResponse geoCodingApiResponse(Integer zipCode) {
         GeoCodingApiResponse geoCodingApiResponse = new GeoCodingApiResponse();
         try {
             geoCodingApiResponse = restTemplate.getForObject(geoCodingUrl, GeoCodingApiResponse.class, zipCode, geoCodingApiKey);
@@ -59,6 +64,13 @@ public class WeatherServiceImpl implements IWeatherService{
         return geoCodingApiResponse;
     }
 
+    /**
+    * Returns an object that contains weather details for 8 days based on latitude amd longitude
+    *
+    * @param  latitude  latitude of a location
+    * @param  longitude longitude of a location
+    * @return  OpenWeatherApiResponse 
+    */
     @Override
     public OpenWeatherApiResponse openWeatherApiResponse(String latitude, String longitude) {
         OpenWeatherApiResponse openWeatherApiResponse = new OpenWeatherApiResponse();
@@ -73,6 +85,11 @@ public class WeatherServiceImpl implements IWeatherService{
         return openWeatherApiResponse;
     }
 
+    /**
+    * Saves an entity of one week weather details for a particular zipcode to SQL H2 Database
+    *
+    * @param  zipCode  zipcode of alocation
+    */
     @Override
     public void saveWeatherDetails(WeatherServiceResponse weatherServiceResponse, int zipCode) {
         if(null != weatherServiceResponse.getWeeklyWeather()){
@@ -91,6 +108,12 @@ public class WeatherServiceImpl implements IWeatherService{
         }   
     }
 
+    /**
+    * Returns an object that contains weather details for 15 days based on zipcode
+    *
+    * @param  zipCode  zipcode of alocation
+    * @return  VisualCrossingApiResponse 
+    */
     @Override
     public VisualCrossingApiResponse visualCrossingApiResponse(Integer zipCode) {
         VisualCrossingApiResponse visualCrossingApiResponse = new VisualCrossingApiResponse();
