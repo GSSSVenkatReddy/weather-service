@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VisualCrossingApiResponse {
+    private String address;
     private List<Days> days;
 }

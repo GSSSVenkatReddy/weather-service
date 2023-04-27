@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GeoCodingApiResponse {
     private PlusCode plus_code;
+    private String status;
 }
