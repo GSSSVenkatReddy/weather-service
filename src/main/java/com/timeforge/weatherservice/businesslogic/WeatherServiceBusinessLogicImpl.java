@@ -30,7 +30,7 @@ public class WeatherServiceBusinessLogicImpl implements IWeatherServiceBusinessL
     private String visualcrossingApi;
 
     /**
-    * Returns an object that contains weather details for a week to the calling application
+    * Returns an object that contains weather details for a week to the controller
     * Contains specific business logic for which weather api to consume 
     *  
     * @param  zipCode  zipcode of a location
