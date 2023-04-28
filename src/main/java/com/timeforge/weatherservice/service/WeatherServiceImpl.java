@@ -88,7 +88,7 @@ public class WeatherServiceImpl implements IWeatherService{
     /**
     * Saves an entity of one week weather details for a particular zipcode to SQL H2 Database
     *
-    * @param  zipCode  zipcode of alocation
+    * @param  zipCode  zipcode of a location
     */
     @Override
     public void saveWeatherDetails(WeatherServiceResponse weatherServiceResponse, int zipCode) {
@@ -111,7 +111,7 @@ public class WeatherServiceImpl implements IWeatherService{
     /**
     * Returns an object that contains weather details for 15 days based on zipcode
     *
-    * @param  zipCode  zipcode of alocation
+    * @param  zipCode  zipcode of a location
     * @return  VisualCrossingApiResponse 
     */
     @Override
