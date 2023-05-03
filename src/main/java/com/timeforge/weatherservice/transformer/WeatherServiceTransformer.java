@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.timeforge.weatherservice.dto.WeatherServiceResponse;
 import com.timeforge.weatherservice.dto.WeeklyWeather;
+import com.timeforge.weatherservice.entity.WeatherDetails;
 import com.timeforge.weatherservice.service.geocodingapi.response.GeoCodingApiResponse;
 import com.timeforge.weatherservice.service.openweatherapi.response.Daily;
 import com.timeforge.weatherservice.service.openweatherapi.response.OpenWeatherApiResponse;
@@ -17,7 +18,10 @@ import com.timeforge.weatherservice.service.openweatherapi.response.Weather;
 import com.timeforge.weatherservice.service.visualcrossingapi.response.Days;
 import com.timeforge.weatherservice.service.visualcrossingapi.response.VisualCrossingApiResponse;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class WeatherServiceTransformer {
 
     @Value("${weeklyweather.dateformat}")
@@ -72,6 +76,46 @@ public class WeatherServiceTransformer {
         }
         weatherServiceResponse.setWeeklyWeather(weeklyWeatherList);
         return weatherServiceResponse;
+    }
+
+    public WeatherServiceResponse transformEntityResponseToWeatherServiceResponse(
+            List<WeatherDetails> weatherDetailsList) {
+        WeatherServiceResponse weatherServiceResponse = new WeatherServiceResponse();
+        List<WeeklyWeather> weeklyWeatherList = new ArrayList<>();
+        // traverse through the weatherDetailsList and prepare the WeatherServiceResponse
+        for(WeatherDetails weatherDetails : weatherDetailsList){
+            WeeklyWeather weeklyWeather = new WeeklyWeather();
+            weeklyWeather.setDate(weatherDetails.getDate());
+            weeklyWeather.setDescriptiveCondition(weatherDetails.getDescriptiveCondition());
+            weeklyWeather.setHighTemperature(weatherDetails.getHighTemperature());
+            weeklyWeather.setHumidity(weeklyWeather.getHumidity());
+            weeklyWeather.setLowTemperatute(weeklyWeather.getLowTemperatute());
+            weeklyWeather.setPrecipitationPercentage(weeklyWeather.getPrecipitationPercentage());
+
+            weeklyWeatherList.add(weeklyWeather);
+        }
+        weatherServiceResponse.setWeeklyWeather(weeklyWeatherList);
+        return weatherServiceResponse;
+    }
+
+    public Long findTimeDifferenceInMinutes(List<WeatherDetails> weatherDetailsList) {
+        long difference_In_Minutes = 16;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        if(!weatherDetailsList.isEmpty()){
+            String apiCallDate = weatherDetailsList.get(0).getDateTimeOfApiCall();
+            String currentDate = sdf.format(new Date());
+            try {
+                Date d1 = sdf.parse(currentDate);
+                Date d2 = sdf.parse(apiCallDate);
+                long difference_In_Time = d1.getTime() - d2.getTime();
+                difference_In_Minutes = (difference_In_Time / (1000 * 60)) % 60;
+                log.info("difference in minutes "+difference_In_Minutes);
+            } catch(Exception e) {
+                log.error("Error in findTimeDifferenceInMinutes() method" + e);
+            }
+
+        }
+        return difference_In_Minutes;
     }
     
 }

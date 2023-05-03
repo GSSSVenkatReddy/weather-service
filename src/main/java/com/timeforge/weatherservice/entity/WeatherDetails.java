@@ -25,4 +25,6 @@ public class WeatherDetails {
     private double humidity;
     private double precipitationPercentage;
     private String descriptiveCondition;
+    private String dateTimeOfApiCall;
+    private String weatherApiType;
 }

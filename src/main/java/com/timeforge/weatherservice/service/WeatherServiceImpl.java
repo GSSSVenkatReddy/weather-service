@@ -1,5 +1,9 @@
 package com.timeforge.weatherservice.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -59,7 +63,7 @@ public class WeatherServiceImpl implements IWeatherService{
             }
     
         } catch(Exception e) {
-            log.error("unable to call geocodingapi service", e);
+            log.error("unable to call geocodingapi service" + e);
         }
         return geoCodingApiResponse;
     }
@@ -80,7 +84,7 @@ public class WeatherServiceImpl implements IWeatherService{
                 log.info(openWeatherApiResponse.toString());
             }
         } catch(Exception e) {
-            log.error("unable to call openweatherapi service", e);
+            log.error("unable to call openweatherapi service" + e);
         }
         return openWeatherApiResponse;
     }
@@ -91,7 +95,9 @@ public class WeatherServiceImpl implements IWeatherService{
     * @param  zipCode  zipcode of a location
     */
     @Override
-    public void saveWeatherDetails(WeatherServiceResponse weatherServiceResponse, int zipCode) {
+    public void saveWeatherDetails(WeatherServiceResponse weatherServiceResponse, int zipCode, String weatherApi) {
+        SimpleDateFormat localDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
         if(null != weatherServiceResponse.getWeeklyWeather()){
             for(WeeklyWeather weeklyWeather : weatherServiceResponse.getWeeklyWeather()){
                 WeatherDetails weatherDetails = new WeatherDetails();
@@ -102,7 +108,11 @@ public class WeatherServiceImpl implements IWeatherService{
                 weatherDetails.setHumidity(weeklyWeather.getHumidity());
                 weatherDetails.setLowTemperature(weeklyWeather.getLowTemperatute());
                 weatherDetails.setPrecipitationPercentage(weeklyWeather.getPrecipitationPercentage());
-    
+                // need to save weatherApiType and date
+                weatherDetails.setWeatherApiType(weatherApi);
+                String time = localDateFormat.format(new Date());
+                weatherDetails.setDateTimeOfApiCall(time);
+
                 repository.save(weatherDetails);
             }
         }   
@@ -123,9 +133,15 @@ public class WeatherServiceImpl implements IWeatherService{
                 log.info(visualCrossingApiResponse.toString());
             }
         } catch(Exception e) {
-            log.error("unable to call visualcrossingapi service", e);
+            log.error("unable to call visualcrossingapi service" + e);
         }
         return visualCrossingApiResponse;
+    }
+
+    @Override
+    public List<WeatherDetails> getWeatherDetailsByZipCode(Integer zipCode, String weatherApi) {
+        List<WeatherDetails> weatherDetailsList = repository.findByZipCodeAndWeatherApiType(zipCode, weatherApi);
+        return weatherDetailsList;
     }
     
 }

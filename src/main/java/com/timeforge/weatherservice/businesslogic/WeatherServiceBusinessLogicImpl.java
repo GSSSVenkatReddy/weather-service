@@ -1,10 +1,13 @@
 package com.timeforge.weatherservice.businesslogic;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.timeforge.weatherservice.dto.WeatherServiceResponse;
+import com.timeforge.weatherservice.entity.WeatherDetails;
 import com.timeforge.weatherservice.service.IWeatherService;
 import com.timeforge.weatherservice.service.geocodingapi.response.GeoCodingApiResponse;
 import com.timeforge.weatherservice.service.openweatherapi.response.OpenWeatherApiResponse;
@@ -42,21 +45,31 @@ public class WeatherServiceBusinessLogicImpl implements IWeatherServiceBusinessL
 
         WeatherServiceResponse weatherServiceResponse = new WeatherServiceResponse();
 
-        if(weatherApi.equals(openWeatherApi)){
-            GeoCodingApiResponse geoCodingApiResponse =  weatherService.geoCodingApiResponse(zipCode);
+        // DB call for getting data based on zipcode if available
+        List<WeatherDetails> weatherDetailsList = weatherService.getWeatherDetailsByZipCode(zipCode, weatherApi);
 
-            OpenWeatherApiResponse openWeatherApiResponse = weatherService.openWeatherApiResponse(transformer.getLatitude(geoCodingApiResponse), transformer.getLongitude(geoCodingApiResponse));
+        // Need to check the date with time parameter (within 15 minutes)
+        Long differenceInMinutes = transformer.findTimeDifferenceInMinutes(weatherDetailsList);
+        if(differenceInMinutes <= 15){
+            // transform the entity response to WeatherServiceResponse
+            weatherServiceResponse = transformer.transformEntityResponseToWeatherServiceResponse(weatherDetailsList);
+        } else{
+            if(weatherApi.equals(openWeatherApi)){
+                GeoCodingApiResponse geoCodingApiResponse =  weatherService.geoCodingApiResponse(zipCode);
     
-            weatherServiceResponse = transformer.transformToWeatherServiceResponseFromOpenWeatherApiResponse(openWeatherApiResponse);
-        }
+                OpenWeatherApiResponse openWeatherApiResponse = weatherService.openWeatherApiResponse(transformer.getLatitude(geoCodingApiResponse), transformer.getLongitude(geoCodingApiResponse));
         
-        if(weatherApi.equals(visualcrossingApi)){
-            VisualCrossingApiResponse visualCrossingApiResponse = weatherService.visualCrossingApiResponse(zipCode);
-
-            weatherServiceResponse = transformer.transformToWeatherServiceResponseFromVisualCrossingApiResponse(visualCrossingApiResponse);
+                weatherServiceResponse = transformer.transformToWeatherServiceResponseFromOpenWeatherApiResponse(openWeatherApiResponse);
+            }
+            
+            if(weatherApi.equals(visualcrossingApi)){
+                VisualCrossingApiResponse visualCrossingApiResponse = weatherService.visualCrossingApiResponse(zipCode);
+    
+                weatherServiceResponse = transformer.transformToWeatherServiceResponseFromVisualCrossingApiResponse(visualCrossingApiResponse);
+            }
+            
+            weatherService.saveWeatherDetails(weatherServiceResponse, zipCode, weatherApi);
         }
-        
-        weatherService.saveWeatherDetails(weatherServiceResponse, zipCode);
 
         return weatherServiceResponse;
     }
