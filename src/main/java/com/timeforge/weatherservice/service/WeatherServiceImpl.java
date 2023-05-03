@@ -65,7 +65,7 @@ public class WeatherServiceImpl implements IWeatherService{
     }
 
     /**
-    * Returns an object that contains weather details for 8 days based on latitude amd longitude
+    * Returns an object that contains weather details for 8 days based on latitude and longitude
     *
     * @param  latitude  latitude of a location
     * @param  longitude longitude of a location
